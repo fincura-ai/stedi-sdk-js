@@ -1,0 +1,9 @@
+# Exclude All
+/*
+
+# Explicit includes
+!dist
+!package.json
+
+# Artifacts
+.DS_Store

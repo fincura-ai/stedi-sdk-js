@@ -1,0 +1,16 @@
+# Exclude All
+/*
+
+# Explicit includes
+!__tests__/
+!src/
+!eslint.config.mjs
+!.gitignore
+!.npmignore
+!jest.config.mjs
+!LICENSE
+!package.json
+!package-lock.json
+!README.md
+!tsconfig.json
+!tsconfig.eslint.json
