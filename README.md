@@ -705,31 +705,33 @@ Contributions are welcome. Please follow these guidelines:
 
 ### Development Setup
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/fincura-ai/stedi-sdk-js.git
-   cd stedi-sdk-js
-   ```
+**Use pnpm** - npm has issues with platform-specific native bindings (especially on macOS). Install pnpm globally:
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+```bash
+npm install -g pnpm
+# or with Corepack (Node.js 16.9+)
+corepack enable
+```
 
-3. Run tests:
-   ```bash
-   npm test
-   ```
+Then:
 
-4. Run linter:
-   ```bash
-   npm run lint
-   ```
+```bash
+# Clone
+git clone https://github.com/fincura-ai/stedi-sdk-js.git
+cd stedi-sdk-js
 
-5. Build the project:
-   ```bash
-   npm run build
-   ```
+# Install dependencies
+pnpm install
+
+# Run tests
+pnpm test
+
+# Run linter
+pnpm run lint
+
+# Build
+pnpm run build
+```
 
 ### Guidelines
 
@@ -743,18 +745,18 @@ Contributions are welcome. Please follow these guidelines:
 
 ```bash
 # Run all tests
-npm test
+pnpm test
 
 # Run tests in watch mode
-npm run test -- --watch
+pnpm test -- --watch
 
 # Run tests with coverage
-npm run test -- --coverage
+pnpm test -- --coverage
 ```
 
 ## Requirements
 
-- Node.js >= 16.x
+- Node.js >= 20.x
 - TypeScript >= 5.0 (for development)
 
 ## License
