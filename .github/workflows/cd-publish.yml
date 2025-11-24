@@ -1,0 +1,160 @@
+name: '[CD] Publish Package'
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-[a-z]+.[0-9]+'
+
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to publish'
+        required: true
+        type: string
+
+run-name: Publish Package ${{ inputs.tag || github.ref_name }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build
+
+    outputs:
+      tag: ${{ steps.set-tag.outputs.tag }}
+      npm-tag: ${{ steps.determine-tag.outputs.npm-tag }}
+      version: ${{ steps.determine-tag.outputs.version }}
+
+    steps:
+      - name: Set tag
+        id: set-tag
+        run: echo "tag=${{ inputs.tag || github.ref_name }}" >> $GITHUB_OUTPUT
+
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.set-tag.outputs.tag }}
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: Build package
+        run: pnpm build
+
+      - name: Determine npm tag
+        id: determine-tag
+        run: |
+          VERSION="${{ steps.set-tag.outputs.tag }}"
+          VERSION="${VERSION#v}"
+          
+          if [[ "$VERSION" =~ (alpha|beta|rc) ]]; then
+            NPM_TAG="next"
+          else
+            NPM_TAG="latest"
+          fi
+          
+          echo "npm-tag=$NPM_TAG" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # Upload dist for publishing jobs
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
+  publish-npm:
+    runs-on: ubuntu-latest
+    name: Publish to npm
+    needs: build
+
+    permissions:
+      id-token: write # Required for npm OIDC Trusted Publishers
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.build.outputs.tag }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: Publish to npm
+        run: npm publish --tag ${{ needs.build.outputs.npm-tag }}
+
+  # publish-github:
+  #   runs-on: ubuntu-latest
+  #   name: Publish to GitHub Packages
+  #   needs: build
+
+  #   permissions:
+  #     packages: write
+
+  #   steps:
+  #     - name: Checkout the repository
+  #       uses: actions/checkout@v4
+  #       with:
+  #         ref: ${{ needs.build.outputs.tag }}
+
+  #     - name: Download build artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: dist
+  #         path: dist/
+
+  #     - name: Setup Environment
+  #       uses: ./.github/actions/setup-env
+
+  #     - name: Publish to GitHub Packages
+  #       run: npm publish --tag ${{ needs.build.outputs.npm-tag }}
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  attach-assets:
+    runs-on: ubuntu-latest
+    name: Attach Release Assets
+    needs: [build, publish-npm]
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.build.outputs.tag }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Setup Environment
+        uses: ./.github/actions/setup-env
+
+      - name: Create package tarball
+        run: |
+          pnpm pack
+          echo "TARBALL_NAME=$(ls *.tgz)" >> $GITHUB_ENV
+
+      - name: Check if release exists
+        id: check-release
+        run: gh release view "${{ needs.build.outputs.tag }}" &>/dev/null && echo "exists=true" >> $GITHUB_OUTPUT || echo "exists=false" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload tarball to release assets
+        if: steps.check-release.outputs.exists == 'true'
+        uses: softprops/action-gh-release@v2.4.2
+        with:
+          tag_name: ${{ needs.build.outputs.tag }}
+          files: ${{ env.TARBALL_NAME }}

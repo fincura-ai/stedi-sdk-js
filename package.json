@@ -26,6 +26,9 @@
   "license": "MIT",
   "main": "dist/index.js",
   "name": "@fincuratech/stedi-sdk-js",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fincura-ai/stedi-sdk-js.git"
@@ -40,8 +43,5 @@
   },
   "type": "module",
   "types": "dist/types/index.d.ts",
-  "version": "0.0.1",
-  "publishConfig": {
-    "access": "public"
-  }
+  "version": "0.0.1"
 }

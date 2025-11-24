@@ -1,0 +1,107 @@
+name: '[CD] Release'
+
+on:
+  workflow_dispatch:
+    inputs:
+      pre-release:
+        description: |
+          Add a pre-release identifier
+        default: '-'
+        options:
+          - '-'
+          - 'alpha'
+          - 'beta'
+          - 'rc'
+        required: false
+        type: choice
+
+      pre-release-increment:
+        description: |
+          Unique pre-release increment number
+        default: 0
+        required: false
+        type: number
+
+      force-increment:
+        description: |
+          Force a specific version increment
+        default: 'auto'
+        options:
+          - 'auto'
+          - 'major'
+          - 'minor'
+          - 'patch'
+        required: false
+        type: choice
+
+run-name: Create New Release
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    name: Bump, Tag & Release
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Configure git
+        run: |
+          git config user.name 'Fincura CI'
+          git config user.email github-actions@github.com
+          git config --global user.email github-actions@github.com
+          git config --global user.name 'Fincura CI'
+
+      - name: Set up package manager
+        uses: actions/setup-node@v4
+
+      # Also installs the `cog` command needed in the following steps
+      - name: Conventional commit check
+        uses: cocogitto/cocogitto-action@v3
+        with:
+          git-user: fincura-ci
+          git-user-email: github-actions@github.com
+
+      - name: Bump Version
+        id: bump
+        run: |
+          BUMP_FLAGS="--${{ github.event.inputs.force-increment }}"
+          if [[ "${{ github.event.inputs.pre-release }}" != "-" ]]; then
+            BUMP_FLAGS+=" --pre ${{ github.event.inputs.pre-release }}.${{ github.event.inputs.pre-release-increment }}"
+          fi
+          eval "cog bump ${BUMP_FLAGS}"
+
+          TAG_REVISION=$(git rev-list --tags --max-count=1)
+          VERSION=$(git describe --tags "${TAG_REVISION}")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          PRERELEASE=$( \
+            if [[ '${{ github.event.inputs.pre-release }}' != '-' ]]; then \
+              echo 'true'; \
+            else \
+              echo 'false'; \
+            fi \
+          )
+          echo "prerelease=$PRERELEASE" >> $GITHUB_OUTPUT
+
+      - name: Push new version
+        run: |
+          git push origin main --follow-tags
+
+      - name: Generate Release Changelog
+        run: |
+          cog changelog --at ${{ steps.bump.outputs.version }} -t full_hash \
+          > RELEASE_CHANGELOG.md
+
+      - name: Upload github release
+        uses: softprops/action-gh-release@v2.4.2
+        with:
+          body_path: RELEASE_CHANGELOG.md
+          tag_name: ${{ steps.bump.outputs.version }}
+          prerelease: ${{ steps.bump.outputs.prerelease }}

@@ -3,10 +3,13 @@
 
 # Explicit includes
 !__tests__/
+!.github/
 !src/
 !eslint.config.mjs
 !.gitignore
 !.npmignore
+!CHANGELOG.md
+!cog.toml
 !jest.config.mjs
 !LICENSE
 !package.json
