@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.0.0](https://github.com/fincura-ai/stedi-sdk-js/compare/f09d4642fd04a752f3e46c2866c6aacd1bcfb13f..v1.0.0) - 2025-11-24
+#### 🌟 Features
+- first stable release - ([f09d464](https://github.com/fincura-ai/stedi-sdk-js/commit/f09d4642fd04a752f3e46c2866c6aacd1bcfb13f)) - [@sylver](https://github.com/sylver)
+
+- - -
+
 ## [v0.0.1](https://github.com/fincura-ai/stedi-sdk-js/compare/a7a032550ef9d205642b162f1953277fdea77fe4..v0.0.1) - 2025-11-24
 
 - - -
