@@ -1,6 +1,9 @@
 # Stedi SDK for JavaScript/TypeScript
 
-An unofficial TypeScript SDK for [Stedi's EDI Platform and Healthcare APIs](https://www.stedi.com/docs/). This library provides type-safe wrappers for Stedi's REST APIs, including eligibility checks, transaction management, provider enrollment, and payer lookups.
+TypeScript SDK for [Stedi's EDI Platform and Healthcare APIs](https://www.stedi.com/docs/). This library provides type-safe wrappers for Stedi's REST APIs, including eligibility checks, transaction management, provider enrollment, and payer lookups.
+
+> [!NOTE]
+> This is an unofficial third-party SDK for integrating with Stedi's EDI Platform and Healthcare APIs. It is not affiliated with or endorsed by Stedi. Learn more [about us](#about-us).
 
 [![npm version](https://img.shields.io/npm/v/@fincuratech/stedi-sdk-js.svg)](https://www.npmjs.com/package/@fincuratech/stedi-sdk-js)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
@@ -27,6 +30,14 @@ An unofficial TypeScript SDK for [Stedi's EDI Platform and Healthcare APIs](http
 - [Logging](#logging)
 - [Contributing](#contributing)
 - [License](#license)
+- [Resources](#resources)
+- [Support](#support)
+- [About Us](#about-us)
+
+## Requirements
+
+- Node.js >= 20.x
+- TypeScript >= 5.0 (for development)
 
 ## Installation
 
@@ -754,11 +765,6 @@ pnpm test -- --watch
 pnpm test -- --coverage
 ```
 
-## Requirements
-
-- Node.js >= 20.x
-- TypeScript >= 5.0 (for development)
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for full details.
@@ -776,11 +782,13 @@ Copyright (c) 2024 Fincura Technologies, Inc.
 For issues and questions:
 
 - Open an issue on [GitHub](https://github.com/fincura-ai/stedi-sdk-js/issues)
-- Contact [Fincura Technologies](https://fincura.ai)
+- Contact Us at [tech@fincura.ai](mailto:tech@fincura.ai)
 - Check [Stedi's Support](https://www.stedi.com/support)
 
-## About
+## About Us
 
 Developed by [Fincura Technologies, Inc.](https://fincura.ai)
 
-This is an unofficial third-party SDK for integrating with Stedi's EDI Platform and Healthcare APIs. It is not affiliated with or endorsed by Stedi.
+We provide healthcare practices and providers with automated insurance payment reconciliation and posting software, enabling provider staff to get paid 2.5x faster by payers and automate 40 hours per month in payment reconciliations.
+
+Our platform leverages multiple sources to access ERA 835 payment remittance details of health insurance claims, including direct payer integrations and clearinghouse partners like Stedi. This SDK powers our payment reconciliation product by integrating with Stedi's insurance claim and payment remittance APIs.
