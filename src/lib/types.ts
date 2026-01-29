@@ -742,7 +742,6 @@ export type StediListEnrollmentsParams = {
    * Sort the results by one or more properties in `property:direction` format.
    * Supported properties: `updatedAt`, `statusLastUpdatedAt`, `id`.
    * Direction: `asc` or `desc`.
-   * @example ['updatedAt:desc', 'id:asc']
    */
   sortBy?: string[];
   /**
