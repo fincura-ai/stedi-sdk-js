@@ -67,6 +67,28 @@ describe('enrollment', () => {
     });
   });
 
+  describe('get', () => {
+    it('should call the client with the correct parameters', async () => {
+      // Mock implementation
+      const mockResponse = { id: 'test-enrollment-id' };
+      mockClient.request.mockResolvedValue(mockResponse);
+
+      // Test input
+      const enrollmentId = 'test-enrollment-id';
+
+      // Execute
+      const result = await enrollmentService.get(enrollmentId);
+
+      // Verify
+      expect(mockClient.request).toHaveBeenCalledWith(
+        testBaseUrl,
+        'GET',
+        `/enrollments/${enrollmentId}`,
+      );
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
   describe('list', () => {
     it('should call the client with no parameters when none provided', async () => {
       // Mock implementation
