@@ -2,6 +2,8 @@ import { type StediClient } from '../lib/client.js';
 import {
   type StediEnrollmentInput,
   type StediEnrollmentResponse,
+  type StediListEnrollmentsParams,
+  type StediListEnrollmentsResponse,
 } from '../lib/types.js';
 
 export const enrollment = (client: StediClient, baseUrl: string) => {
@@ -20,6 +22,27 @@ export const enrollment = (client: StediClient, baseUrl: string) => {
       return await client.request(baseUrl, 'POST', '/enrollments', {
         data: input,
       });
+    },
+
+    /**
+     * List transaction enrollment records with optional filtering and pagination.
+     *
+     * @see https://www.stedi.com/docs/healthcare/api-reference/get-enrollment-list-enrollments
+     *
+     * @param params - Optional filtering and pagination parameters.
+     * @returns A promise that resolves to the list of enrollments.
+     */
+    list: async (
+      params: StediListEnrollmentsParams = {},
+    ): Promise<StediListEnrollmentsResponse> => {
+      return await client.request<StediListEnrollmentsResponse>(
+        baseUrl,
+        'GET',
+        '/enrollments',
+        {
+          params,
+        },
+      );
     },
   };
 };
