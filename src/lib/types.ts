@@ -763,7 +763,7 @@ export type StediListEnrollmentsParams = {
   /**
    * Filter for enrollments for specific transaction types.
    */
-  transactions?: StediEnrollmentTransactionType[];
+  transactions?: StediEnrollmentTransaction[];
 };
 
 export type StediListEnrollmentsResponse = {
