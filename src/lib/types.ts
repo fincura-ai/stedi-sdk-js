@@ -656,7 +656,7 @@ export type StediEnrollmentStatus =
 
 export type StediEnrollmentSource = 'API' | 'UI';
 
-export type StediEnrollmentTransactionType =
+export type StediEnrollmentTransaction =
   | 'claimPayment'
   | 'claimStatus'
   | 'claimSubmission'
