@@ -43,6 +43,9 @@ describe('stediClient', () => {
           'Content-Type': 'application/json',
         },
         method: 'GET',
+        paramsSerializer: {
+          indexes: null,
+        },
         url: `${testBaseUrl}/test-path`,
       });
       expect(result).toEqual(mockResponse.data);
