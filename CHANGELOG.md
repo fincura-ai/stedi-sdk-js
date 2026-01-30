@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.1.0](https://github.com/fincura-ai/stedi-sdk-js/compare/b7583346363eeb649a4da630fbc01678ceacbd77..v1.1.0) - 2026-01-30
+#### 🌟 Features
+- **(enrollments)** add list and get endpoints (#9) - ([38316a8](https://github.com/fincura-ai/stedi-sdk-js/commit/38316a8f40274bf3731bda6af6a562b62ea05ebd)) - [@louis-lamoureux](https://github.com/louis-lamoureux)
+#### 🧹 Miscellaneous Chores
+- **(deps)** bump axios in the minor-production-deps group (#8) - ([03d24ae](https://github.com/fincura-ai/stedi-sdk-js/commit/03d24aedcc16251223d2a75ed5d5ae3188957942)) - dependabot[bot]
+- **(deps-dev)** bump the minor-development-deps group across 1 directory with 6 updates (#5) - ([e8a8078](https://github.com/fincura-ai/stedi-sdk-js/commit/e8a8078b93b531d39ba4c1016e47946139a45495)) - dependabot[bot]
+- **(deps-dev)** bump the major-development-deps group across 1 directory with 2 updates (#3) - ([b47e425](https://github.com/fincura-ai/stedi-sdk-js/commit/b47e4253a665b659cd499123fe7934d8f1a64239)) - dependabot[bot]
+- **(doc)** Improve About Us section - ([b758334](https://github.com/fincura-ai/stedi-sdk-js/commit/b7583346363eeb649a4da630fbc01678ceacbd77)) - [@sylver](https://github.com/sylver)
+
+- - -
+
 ## [v1.0.0](https://github.com/fincura-ai/stedi-sdk-js/compare/f09d4642fd04a752f3e46c2866c6aacd1bcfb13f..v1.0.0) - 2025-11-24
 #### 🌟 Features
 - first stable release - ([f09d464](https://github.com/fincura-ai/stedi-sdk-js/commit/f09d4642fd04a752f3e46c2866c6aacd1bcfb13f)) - [@sylver](https://github.com/sylver)
