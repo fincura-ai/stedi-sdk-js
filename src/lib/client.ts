@@ -88,6 +88,10 @@ export const stediClient = (apiKey: string) => {
           ...config?.headers,
         },
         method,
+        // Serialize arrays without brackets
+        paramsSerializer: {
+          indexes: null,
+        },
         url: `${baseUrl}/${path.replace(/^\//u, '')}`,
       });
 
