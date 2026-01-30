@@ -654,6 +654,15 @@ export type StediEnrollmentStatus =
   | 'REJECTED'
   | 'SUBMITTED';
 
+export type StediEnrollmentSource = 'API' | 'UI';
+
+export type StediEnrollmentTransaction =
+  | 'claimPayment'
+  | 'claimStatus'
+  | 'claimSubmission'
+  | 'coordinationOfBenefits'
+  | 'eligibilityCheck';
+
 export type StediEnrollmentResponse = {
   createdAt: string;
   id: string;
@@ -685,4 +694,79 @@ export type StediEnrollmentResponse = {
   };
   updatedAt: string;
   userEmail: string;
+};
+
+export type StediListEnrollmentsParams = {
+  /**
+   * Filter for enrollments created from a specific date (ISO 8601 format).
+   */
+  createdFrom?: string;
+  /**
+   * Filter for enrollments created before a specific date (ISO 8601 format).
+   */
+  createdTo?: string;
+  /**
+   * Filter for enrollments with properties matching a query string.
+   * Supports fuzzy matching on provider name, NPI, tax ID, or Stedi payer ID.
+   */
+  filter?: string;
+  /**
+   * The import ID associated with an enrollment through a CSV bulk import.
+   */
+  importId?: string;
+  /**
+   * The maximum number of elements to return in a page (1-500, default 100).
+   */
+  pageSize?: number;
+  /**
+   * An opaque token for pagination, returned by a previous call in `nextPageToken`.
+   */
+  pageToken?: string;
+  /**
+   * Filter for enrollments associated with specific Stedi payer IDs.
+   */
+  payerIds?: string[];
+  /**
+   * Filter for enrollments associated with specific provider names (case-sensitive, exact match).
+   */
+  providerNames?: string[];
+  /**
+   * Filter for enrollments associated with specific provider NPIs.
+   */
+  providerNpis?: string[];
+  /**
+   * Filter for enrollments associated with specific provider tax IDs.
+   */
+  providerTaxIds?: string[];
+  /**
+   * Sort the results by one or more properties in `property:direction` format.
+   * Supported properties: `updatedAt`, `statusLastUpdatedAt`, `id`.
+   * Direction: `asc` or `desc`.
+   */
+  sortBy?: string[];
+  /**
+   * Filter for enrollments submitted through specific sources (API or UI).
+   */
+  sources?: StediEnrollmentSource[];
+  /**
+   * Filter for enrollments with specific statuses.
+   */
+  status?: StediEnrollmentStatus[];
+  /**
+   * Filter for enrollments whose status was last updated from a specific date (ISO 8601 format).
+   */
+  statusUpdatedFrom?: string;
+  /**
+   * Filter for enrollments whose status was last updated before a specific date (ISO 8601 format).
+   */
+  statusUpdatedTo?: string;
+  /**
+   * Filter for enrollments for specific transaction types.
+   */
+  transactions?: StediEnrollmentTransaction[];
+};
+
+export type StediListEnrollmentsResponse = {
+  items: StediEnrollmentResponse[];
+  nextPageToken?: string;
 };
