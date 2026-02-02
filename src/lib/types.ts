@@ -663,14 +663,46 @@ export type StediEnrollmentTransaction =
   | 'coordinationOfBenefits'
   | 'eligibilityCheck';
 
+export type StediEnrollmentDocument = {
+  createdAt: string;
+  enrollmentId: string;
+  id: string;
+  name: string;
+  status: string;
+  updatedAt: string;
+};
+
+export type StediEnrollmentHistoryItem = {
+  changedAt: string;
+  changedBy: string;
+  newStatus: string;
+  previousStatus?: string;
+  type: string;
+};
+
+export type StediEnrollmentTask = {
+  definition: {
+    followInstructions?: {
+      instructions: string;
+    };
+  };
+  id: string;
+  isComplete: boolean;
+  rank: number;
+  responsibleParty: string;
+};
+
 export type StediEnrollmentResponse = {
   createdAt: string;
+  documents?: StediEnrollmentDocument[];
+  history?: StediEnrollmentHistoryItem[];
   id: string;
   payer: {
-    name: string;
+    name?: string;
     stediPayerId: string;
+    submittedPayerIdOrAlias?: string;
   };
-  primaryContact: {
+  primaryContact?: {
     city: string;
     email: string;
     firstName: string;
@@ -682,18 +714,23 @@ export type StediEnrollmentResponse = {
   };
   provider: {
     id: string;
-    name: string;
+    name?: string;
+    npi?: string;
+    taxId?: string;
+    taxIdType?: string;
   };
-  source: string;
+  source?: string;
   status: StediEnrollmentStatus;
-  submittedAt: string;
-  transactions: {
-    claimPayment: {
+  statusLastUpdatedAt?: string;
+  submittedAt?: string;
+  tasks?: StediEnrollmentTask[];
+  transactions?: {
+    claimPayment?: {
       enroll: boolean;
     };
   };
   updatedAt: string;
-  userEmail: string;
+  userEmail?: string;
 };
 
 export type StediListEnrollmentsParams = {
@@ -769,4 +806,5 @@ export type StediListEnrollmentsParams = {
 export type StediListEnrollmentsResponse = {
   items: StediEnrollmentResponse[];
   nextPageToken?: string;
+  totalCount?: number;
 };
