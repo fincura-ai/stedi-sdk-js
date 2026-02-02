@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.1.2](https://github.com/fincura-ai/stedi-sdk-js/compare/074f01a3efb8b3789668390a2776928915924087..v1.1.2) - 2026-02-02
+#### 🐛 Bug Fixes
+- **(enrolments)** improve API types mapping (#12) - ([074f01a](https://github.com/fincura-ai/stedi-sdk-js/commit/074f01a3efb8b3789668390a2776928915924087)) - [@louis-lamoureux](https://github.com/louis-lamoureux)
+
+- - -
+
 ## [v1.1.1](https://github.com/fincura-ai/stedi-sdk-js/compare/d5479acb00c9147d25d612a981866cf0bdbb2182..v1.1.1) - 2026-01-30
 #### 🐛 Bug Fixes
 - flatten array params in query strings (#10) - ([d5479ac](https://github.com/fincura-ai/stedi-sdk-js/commit/d5479acb00c9147d25d612a981866cf0bdbb2182)) - [@louis-lamoureux](https://github.com/louis-lamoureux)
