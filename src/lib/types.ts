@@ -619,6 +619,18 @@ export type StediProviderResponse = {
   updatedAt: string;
 };
 
+export type StediProviderListItem = {
+  id: string;
+  name: string;
+  npi: string;
+  taxId: string;
+  taxIdType: string;
+};
+
+export type StediProviderListResponse = {
+  items: StediProviderListItem[];
+};
+
 export type StediEnrollmentInput = {
   payer: {
     idOrAlias: string;
