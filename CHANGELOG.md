@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.2.0](https://github.com/fincura-ai/stedi-sdk-js/compare/3d6a5d53ce486bada58671feef20322f8130c25f..v1.2.0) - 2026-02-04
+#### 🌟 Features
+- **(providers)** add endpoints (#13) - ([998e95e](https://github.com/fincura-ai/stedi-sdk-js/commit/998e95e1324ced33a71b1bca9f543ded933084de)) - [@louis-lamoureux](https://github.com/louis-lamoureux)
+#### 🧹 Miscellaneous Chores
+- **(deps)** bump axios in the minor-production-deps group (#11) - ([3d6a5d5](https://github.com/fincura-ai/stedi-sdk-js/commit/3d6a5d53ce486bada58671feef20322f8130c25f)) - dependabot[bot]
+
+- - -
+
 ## [v1.1.2](https://github.com/fincura-ai/stedi-sdk-js/compare/074f01a3efb8b3789668390a2776928915924087..v1.1.2) - 2026-02-02
 #### 🐛 Bug Fixes
 - **(enrolments)** improve API types mapping (#12) - ([074f01a](https://github.com/fincura-ai/stedi-sdk-js/commit/074f01a3efb8b3789668390a2776928915924087)) - [@louis-lamoureux](https://github.com/louis-lamoureux)
