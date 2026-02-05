@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.3.0](https://github.com/fincura-ai/stedi-sdk-js/compare/ef4d48d20c5dca39456dd8719b9fe057670a1ab4..v1.3.0) - 2026-02-05
+#### 🌟 Features
+- **(providers)** add list provider input params (#14) - ([ef4d48d](https://github.com/fincura-ai/stedi-sdk-js/commit/ef4d48d20c5dca39456dd8719b9fe057670a1ab4)) - [@louis-lamoureux](https://github.com/louis-lamoureux)
+
+- - -
+
 ## [v1.2.0](https://github.com/fincura-ai/stedi-sdk-js/compare/3d6a5d53ce486bada58671feef20322f8130c25f..v1.2.0) - 2026-02-04
 #### 🌟 Features
 - **(providers)** add endpoints (#13) - ([998e95e](https://github.com/fincura-ai/stedi-sdk-js/commit/998e95e1324ced33a71b1bca9f543ded933084de)) - [@louis-lamoureux](https://github.com/louis-lamoureux)
