@@ -1,5 +1,6 @@
 import { type StediClient } from '../lib/client.js';
 import {
+  type StediListProvidersParams,
   type StediProviderInput,
   type StediProviderListResponse,
   type StediProviderResponse,
@@ -41,14 +42,24 @@ export const provider = (client: StediClient, baseUrl: string) => {
     },
 
     /**
-     * List all Stedi providers
+     * List Stedi providers with optional filtering and pagination.
      *
      * @see https://www.stedi.com/docs/api-reference/healthcare/get-enrollment-providers
      *
+     * @param params - Optional filtering and pagination parameters.
      * @returns A promise that resolves to the list of providers.
      */
-    list: async (): Promise<StediProviderListResponse> => {
-      return await client.request(baseUrl, 'GET', '/providers', {});
+    list: async (
+      params: StediListProvidersParams = {},
+    ): Promise<StediProviderListResponse> => {
+      return await client.request<StediProviderListResponse>(
+        baseUrl,
+        'GET',
+        '/providers',
+        {
+          params,
+        },
+      );
     },
   };
 };

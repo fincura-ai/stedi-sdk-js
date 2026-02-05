@@ -629,6 +629,31 @@ export type StediProviderListItem = {
 
 export type StediProviderListResponse = {
   items: StediProviderListItem[];
+  nextPageToken?: string;
+};
+
+export type StediListProvidersParams = {
+  /**
+   * Filter for providers with properties matching a query string.
+   * Supports fuzzy matching on provider name, NPI, or tax ID.
+   */
+  filter?: string;
+  /**
+   * The maximum number of elements to return in a page (1-500, default 100).
+   */
+  pageSize?: number;
+  /**
+   * An opaque token for pagination, returned by a previous call in `nextPageToken`.
+   */
+  pageToken?: string;
+  /**
+   * Filter for providers with NPIs matching any value in this list.
+   */
+  providerNpis?: string[];
+  /**
+   * Filter for providers with tax IDs matching any value in this list.
+   */
+  providerTaxIds?: string[];
 };
 
 export type StediEnrollmentInput = {
