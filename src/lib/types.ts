@@ -740,14 +740,14 @@ export type StediEnrollmentResponse = {
     submittedPayerIdOrAlias?: string;
   };
   primaryContact?: {
-    city: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    state: string;
-    streetAddress1: string;
-    zipCode: string;
+    city?: string;
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    state?: string;
+    streetAddress1?: string;
+    zipCode?: string;
   };
   provider: {
     id: string;
@@ -756,6 +756,7 @@ export type StediEnrollmentResponse = {
     taxId?: string;
     taxIdType?: string;
   };
+  reason?: string;
   source?: string;
   status: StediEnrollmentStatus;
   statusLastUpdatedAt?: string;
