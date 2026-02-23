@@ -17,13 +17,11 @@ describe('enrollment', () => {
     jest.clearAllMocks();
   });
 
-  describe('check', () => {
-    it('should call the client with the correct parameters', async () => {
-      // Mock implementation
+  describe('create', () => {
+    it('should create an enrollment with individual contact', async () => {
       const mockResponse = { id: 'test-eligibility-id' };
       mockClient.request.mockResolvedValue(mockResponse);
 
-      // Test input
       const input: StediEnrollmentInput = {
         payer: {
           idOrAlias: 'test-payer-id-or-alias',
@@ -52,6 +50,49 @@ describe('enrollment', () => {
       };
 
       // Execute
+      const result = await enrollmentService.create(input);
+
+      expect(mockClient.request).toHaveBeenCalledWith(
+        testBaseUrl,
+        'POST',
+        '/enrollments',
+        {
+          data: input,
+        },
+      );
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('should create an enrollment with organization contact', async () => {
+      const mockResponse = { id: 'test-eligibility-id' };
+      mockClient.request.mockResolvedValue(mockResponse);
+
+      const input: StediEnrollmentInput = {
+        payer: {
+          idOrAlias: 'test-payer-id-or-alias',
+        },
+        primaryContact: {
+          city: 'test-city',
+          email: 'test-email',
+          organizationName: 'Test Organization LLC',
+          phone: 'test-phone',
+          state: 'test-state',
+          streetAddress1: 'test-street-address-1',
+          zipCode: 'test-zip-code',
+        },
+        provider: {
+          id: 'test-provider-id',
+        },
+        source: 'test-source',
+        status: 'DRAFT',
+        transactions: {
+          claimPayment: {
+            enroll: true,
+          },
+        },
+        userEmail: 'test-user-email',
+      };
+
       const result = await enrollmentService.create(input);
 
       // Verify
