@@ -254,7 +254,7 @@ interface StediProviderInput {
   npi: string;
   taxId: string;
   taxIdType: string;
-  contacts: StediProviderContact[];
+  contacts: StediContact[];
 }
 
 // Each contact is one of:
@@ -568,8 +568,11 @@ import type {
   StediPayerResponse,
   StediPayerSearchResponse,
   
+  // Contact
+  StediContact,
+  StediContactResponse,
+
   // Providers
-  StediProviderContact,
   StediProviderInput,
   StediProviderResponse,
   

@@ -579,9 +579,9 @@ export type StediTransactionListResponse = {
   nextPageToken?: string;
 };
 
-// PROVIDER
+// CONTACT
 
-type StediProviderContactBase = {
+type StediContactBase = {
   city: string;
   email: string;
   phone: string;
@@ -591,22 +591,31 @@ type StediProviderContactBase = {
   zipCode: string;
 };
 
-export type StediProviderContact = StediProviderContactBase &
+type StediIndividualContactIdentity = {
+  firstName: string;
+  lastName: string;
+  organizationName?: never;
+};
+
+type StediOrganizationContactIdentity = {
+  firstName?: never;
+  lastName?: never;
+  organizationName: string;
+};
+
+export type StediContact = StediContactBase &
+  (StediIndividualContactIdentity | StediOrganizationContactIdentity);
+
+export type StediContactResponse = Partial<StediContactBase> &
   (
-    | {
-        firstName: string;
-        lastName: string;
-        organizationName?: never;
-      }
-    | {
-        firstName?: never;
-        lastName?: never;
-        organizationName: string;
-      }
+    | Partial<StediIndividualContactIdentity>
+    | Partial<StediOrganizationContactIdentity>
   );
 
+// PROVIDER
+
 export type StediProviderInput = {
-  contacts: StediProviderContact[];
+  contacts: StediContact[];
   name: string;
   npi: string;
   taxId: string;
@@ -614,7 +623,7 @@ export type StediProviderInput = {
 };
 
 export type StediProviderResponse = {
-  contacts: StediProviderContact[];
+  contacts: StediContact[];
   createdAt: string;
   id: string;
   name: string;
@@ -665,16 +674,7 @@ export type StediEnrollmentInput = {
   payer: {
     idOrAlias: string;
   };
-  primaryContact: {
-    city: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    state: string;
-    streetAddress1: string;
-    zipCode: string;
-  };
+  primaryContact: StediContact;
   provider: {
     id: string;
   };
@@ -744,16 +744,7 @@ export type StediEnrollmentResponse = {
     stediPayerId: string;
     submittedPayerIdOrAlias?: string;
   };
-  primaryContact?: {
-    city?: string;
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-    phone?: string;
-    state?: string;
-    streetAddress1?: string;
-    zipCode?: string;
-  };
+  primaryContact?: StediContactResponse;
   provider: {
     id: string;
     name?: string;
