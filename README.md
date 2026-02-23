@@ -246,34 +246,31 @@ Create a new provider profile in Stedi.
 
 **Parameters:**
 
+Each contact must include either `organizationName` **or** `firstName` + `lastName`, but not both.
+
 ```typescript
 interface StediProviderInput {
   name: string;
   npi: string;
   taxId: string;
   taxIdType: string;
-  contacts: Array<{
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    streetAddress1: string;
-    city: string;
-    state: string;
-    zipCode: string;
-  }>;
+  contacts: StediProviderContact[];
 }
+
+// Each contact is one of:
+// - Organization: { organizationName, email, phone, streetAddress1, city, state, zipCode, streetAddress2? }
+// - Individual:   { firstName, lastName, email, phone, streetAddress1, city, state, zipCode, streetAddress2? }
 ```
 
 **Returns:** `Promise<StediProviderResponse>`
 
-**Example:**
+**Example (individual contact):**
 
 ```typescript
 const provider = await stedi.provider.create({
   name: 'Main Street Medical Clinic',
   npi: '1234567890',
-  taxId: '12-3456789',
+  taxId: '123456789',
   taxIdType: 'EIN',
   contacts: [
     {
@@ -291,6 +288,29 @@ const provider = await stedi.provider.create({
 
 console.log(`Provider created with ID: ${provider.id}`);
 console.log(`Created at: ${provider.createdAt}`);
+```
+
+**Example (organization contact):**
+
+```typescript
+const provider = await stedi.provider.create({
+  name: 'Main Street Medical Clinic',
+  npi: '1234567890',
+  taxId: '123456789',
+  taxIdType: 'EIN',
+  contacts: [
+    {
+      organizationName: 'Main Street Medical Clinic',
+      email: 'admin@mainstreetmedical.com',
+      phone: '555-123-4567',
+      streetAddress1: '123 Main St',
+      streetAddress2: 'Suite 100',
+      city: 'Springfield',
+      state: 'IL',
+      zipCode: '62701',
+    },
+  ],
+});
 ```
 
 **Response includes:**
@@ -549,6 +569,7 @@ import type {
   StediPayerSearchResponse,
   
   // Providers
+  StediProviderContact,
   StediProviderInput,
   StediProviderResponse,
   

@@ -581,17 +581,32 @@ export type StediTransactionListResponse = {
 
 // PROVIDER
 
+type StediProviderContactBase = {
+  city: string;
+  email: string;
+  phone: string;
+  state: string;
+  streetAddress1: string;
+  streetAddress2?: string;
+  zipCode: string;
+};
+
+export type StediProviderContact = StediProviderContactBase &
+  (
+    | {
+        firstName: string;
+        lastName: string;
+        organizationName?: never;
+      }
+    | {
+        firstName?: never;
+        lastName?: never;
+        organizationName: string;
+      }
+  );
+
 export type StediProviderInput = {
-  contacts: Array<{
-    city: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    state: string;
-    streetAddress1: string;
-    zipCode: string;
-  }>;
+  contacts: StediProviderContact[];
   name: string;
   npi: string;
   taxId: string;
@@ -599,17 +614,7 @@ export type StediProviderInput = {
 };
 
 export type StediProviderResponse = {
-  contacts: Array<{
-    city: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    organizationName: string;
-    phone: string;
-    state: string;
-    streetAddress1: string;
-    zipCode: string;
-  }>;
+  contacts: StediProviderContact[];
   createdAt: string;
   id: string;
   name: string;

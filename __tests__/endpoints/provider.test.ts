@@ -17,13 +17,11 @@ describe('provider', () => {
     jest.clearAllMocks();
   });
 
-  describe('check', () => {
-    it('should call the client with the correct parameters', async () => {
-      // Mock implementation
-      const mockResponse = { id: 'test-eligibility-id' };
+  describe('create', () => {
+    it('should create a provider with individual contact (firstName + lastName)', async () => {
+      const mockResponse = { id: 'test-provider-id' };
       mockClient.request.mockResolvedValue(mockResponse);
 
-      // Test input
       const input: StediProviderInput = {
         contacts: [
           {
@@ -39,14 +37,12 @@ describe('provider', () => {
         ],
         name: 'Test Provider',
         npi: '1234567866',
-        taxId: '1234567866',
+        taxId: '123456786',
         taxIdType: 'EIN',
       };
 
-      // Execute
       const result = await providerService.create(input);
 
-      // Verify
       expect(mockClient.request).toHaveBeenCalledWith(
         testBaseUrl,
         'POST',
@@ -54,6 +50,59 @@ describe('provider', () => {
         {
           data: input,
         },
+      );
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('should create a provider with organization contact (organizationName)', async () => {
+      const mockResponse = { id: 'test-provider-id' };
+      mockClient.request.mockResolvedValue(mockResponse);
+
+      const input: StediProviderInput = {
+        contacts: [
+          {
+            city: 'Testville',
+            email: 'admin@testorg.com',
+            organizationName: 'Test Organization LLC',
+            phone: '555-987-6543',
+            state: 'TS',
+            streetAddress1: '456 Org Ave',
+            streetAddress2: 'Suite 200',
+            zipCode: '54321',
+          },
+        ],
+        name: 'Test Provider Org',
+        npi: '1234567866',
+        taxId: '123456786',
+        taxIdType: 'EIN',
+      };
+
+      const result = await providerService.create(input);
+
+      expect(mockClient.request).toHaveBeenCalledWith(
+        testBaseUrl,
+        'POST',
+        '/providers',
+        {
+          data: input,
+        },
+      );
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
+  describe('get', () => {
+    it('should call the client with the correct provider ID', async () => {
+      const mockResponse = { id: 'test-provider-id', name: 'Test Provider' };
+      mockClient.request.mockResolvedValue(mockResponse);
+
+      const result = await providerService.get('test-provider-id');
+
+      expect(mockClient.request).toHaveBeenCalledWith(
+        testBaseUrl,
+        'GET',
+        '/providers/test-provider-id',
+        {},
       );
       expect(result).toEqual(mockResponse);
     });
