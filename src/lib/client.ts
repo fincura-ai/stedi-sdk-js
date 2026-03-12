@@ -1,5 +1,6 @@
 import axios, { AxiosError, type AxiosRequestConfig, type Method } from 'axios';
 
+import { StediApiError } from './errors.js';
 import { getLogger } from './logger.js';
 
 /**
@@ -47,13 +48,15 @@ export const stediClient = (apiKey: string) => {
         delete error.request;
         delete error.response?.request;
 
-        throw new Error(
+        throw new StediApiError(
           `Request to Stedi API failed: ${
             error.response?.data.message ||
             error.response?.data.detail ||
             error.message
           }`,
-          { cause: error },
+          error.response?.status ?? 0,
+          error.response?.data,
+          error,
         );
       } else {
         throw error;
@@ -107,13 +110,15 @@ export const stediClient = (apiKey: string) => {
         delete error.request;
         delete error.response?.request;
 
-        throw new Error(
+        throw new StediApiError(
           `Request to Stedi API failed: ${
             error.response?.data.message ||
             error.response?.data.detail ||
             error.message
           }`,
-          { cause: error },
+          error.response?.status ?? 0,
+          error.response?.data,
+          error,
         );
       } else {
         throw error;
