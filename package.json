@@ -2,7 +2,7 @@
   "author": "Fincura Technologies, Inc.",
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
-    "axios": "1.13.5"
+    "axios": "1.13.6"
   },
   "description": "Stedi SDK JS",
   "devDependencies": {
