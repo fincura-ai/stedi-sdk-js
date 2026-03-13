@@ -1,6 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
 import { stediClient } from '../../src/lib/client.js';
+import { StediApiError } from '../../src/lib/errors.js';
 
 // Mock dependencies
 jest.mock('axios');
@@ -52,6 +53,10 @@ describe('stediClient', () => {
     });
 
     it('should handle axios errors correctly', async () => {
+      const responseData = {
+        error: 'INVALID_REQUEST',
+        message: 'API error message',
+      };
       const mockError = new AxiosError(
         'Request failed',
         'ERR_BAD_REQUEST',
@@ -59,9 +64,7 @@ describe('stediClient', () => {
         {},
         {
           config: { headers: {} } as unknown as InternalAxiosRequestConfig,
-          data: {
-            message: 'API error message',
-          },
+          data: responseData,
           headers: {},
           status: 400,
           statusText: 'Bad Request',
@@ -70,9 +73,7 @@ describe('stediClient', () => {
       mockError.isAxiosError = true;
       mockError.response = {
         config: { headers: {} } as unknown as InternalAxiosRequestConfig,
-        data: {
-          message: 'API error message',
-        },
+        data: responseData,
         headers: {},
         status: 400,
         statusText: 'Bad Request',
@@ -81,9 +82,22 @@ describe('stediClient', () => {
       (axios.request as jest.Mock).mockRejectedValue(mockError);
 
       // Execute and verify
+      const promise = client.request(testBaseUrl, 'GET', 'test-path');
+      await expect(promise).rejects.toThrow(StediApiError);
       await expect(
         client.request(testBaseUrl, 'GET', 'test-path'),
       ).rejects.toThrow('Request to Stedi API failed: API error message');
+
+      try {
+        await client.request(testBaseUrl, 'GET', 'test-path');
+      } catch (error) {
+        expect(error).toBeInstanceOf(StediApiError);
+        const apiError = error as StediApiError;
+        expect(apiError.statusCode).toBe(400);
+        expect(apiError.errorCode).toBe('INVALID_REQUEST');
+        expect(apiError.responseBody).toEqual(responseData);
+        expect(apiError.cause).toBe(mockError);
+      }
     });
 
     it('should handle non-axios errors by rethrowing them', async () => {
@@ -176,6 +190,10 @@ describe('stediClient', () => {
     });
 
     it('should handle axios errors correctly', async () => {
+      const responseData = {
+        error: 'NOT_FOUND',
+        message: 'File not found',
+      };
       const mockError = new AxiosError(
         'Request failed',
         'ERR_BAD_REQUEST',
@@ -183,9 +201,7 @@ describe('stediClient', () => {
         {},
         {
           config: { headers: {} } as unknown as InternalAxiosRequestConfig,
-          data: {
-            message: 'File not found',
-          },
+          data: responseData,
           headers: {},
           status: 404,
           statusText: 'Not Found',
@@ -194,9 +210,7 @@ describe('stediClient', () => {
       mockError.isAxiosError = true;
       mockError.response = {
         config: { headers: {} } as unknown as InternalAxiosRequestConfig,
-        data: {
-          message: 'File not found',
-        },
+        data: responseData,
         headers: {},
         status: 404,
         statusText: 'Not Found',
@@ -207,8 +221,64 @@ describe('stediClient', () => {
       // Execute and verify
       const validUrl = 'https://api.stedi.com/files/2023/test.txt';
       await expect(client.downloadFile(validUrl)).rejects.toThrow(
+        StediApiError,
+      );
+      await expect(client.downloadFile(validUrl)).rejects.toThrow(
         'Request to Stedi API failed: File not found',
       );
+
+      try {
+        await client.downloadFile(validUrl);
+      } catch (error) {
+        expect(error).toBeInstanceOf(StediApiError);
+        const apiError = error as StediApiError;
+        expect(apiError.statusCode).toBe(404);
+        expect(apiError.errorCode).toBe('NOT_FOUND');
+        expect(apiError.responseBody).toEqual(responseData);
+        expect(apiError.cause).toBe(mockError);
+      }
+    });
+
+    it('should extract errorCode from the code field on 403 responses', async () => {
+      const responseData = {
+        code: 'access_denied',
+        message: 'Access Denied',
+      };
+      const mockError = new AxiosError(
+        'Request failed',
+        'ERR_FORBIDDEN',
+        { headers: {} } as unknown as InternalAxiosRequestConfig,
+        {},
+        {
+          config: { headers: {} } as unknown as InternalAxiosRequestConfig,
+          data: responseData,
+          headers: {},
+          status: 403,
+          statusText: 'Forbidden',
+        },
+      );
+      mockError.isAxiosError = true;
+      mockError.response = {
+        config: { headers: {} } as unknown as InternalAxiosRequestConfig,
+        data: responseData,
+        headers: {},
+        status: 403,
+        statusText: 'Forbidden',
+      };
+
+      (axios.get as jest.Mock).mockRejectedValue(mockError);
+
+      const validUrl = 'https://api.stedi.com/files/2023/test.txt';
+
+      try {
+        await client.downloadFile(validUrl);
+      } catch (error) {
+        expect(error).toBeInstanceOf(StediApiError);
+        const apiError = error as StediApiError;
+        expect(apiError.statusCode).toBe(403);
+        expect(apiError.errorCode).toBe('access_denied');
+        expect(apiError.responseBody).toEqual(responseData);
+      }
     });
   });
 });
