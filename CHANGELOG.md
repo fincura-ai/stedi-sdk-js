@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.5.0](https://github.com/fincura-ai/stedi-sdk-js/compare/ffe2c6aa0faf7b60a6bfa86ce780f25f320c58c7..v1.5.0) - 2026-03-13
+#### 🌟 Features
+- add better Stedi error handling (#20) - ([ffe2c6a](https://github.com/fincura-ai/stedi-sdk-js/commit/ffe2c6aa0faf7b60a6bfa86ce780f25f320c58c7)) - [@louis-lamoureux](https://github.com/louis-lamoureux)
+#### 🧹 Miscellaneous Chores
+- **(deps)** bump axios in the minor-production-deps group (#19) - ([0530b73](https://github.com/fincura-ai/stedi-sdk-js/commit/0530b73916167b06d46a278038341c5a37855542)) - dependabot[bot]
+
+- - -
+
 ## [v1.4.2](https://github.com/fincura-ai/stedi-sdk-js/compare/916334b498d51d42badeae42b9330992e493add7..v1.4.2) - 2026-02-23
 #### 🐛 Bug Fixes
 - **(enrollments)** common contact inputs (#18) - ([916334b](https://github.com/fincura-ai/stedi-sdk-js/commit/916334b498d51d42badeae42b9330992e493add7)) - [@sylver](https://github.com/sylver)
