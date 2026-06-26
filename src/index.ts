@@ -5,6 +5,13 @@ import { provider } from './endpoints/provider.js';
 import { transactions } from './endpoints/transactions.js';
 import { stediClient } from './lib/client.js';
 
+export {
+  clearInMemoryStediStore,
+  createInMemoryStediClient,
+  createInMemoryStediStore,
+  type InMemoryStediClientOptions,
+  type InMemoryStediStore,
+} from './in-memory.js';
 export { StediApiError, type StediErrorBody } from './lib/errors.js';
 export {
   createConsoleLogger,
