@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v1.7.0](https://github.com/fincura-ai/stedi-sdk-js/compare/b443489eeb80d455af0fb59018df05d3c63708cb..v1.7.0) - 2026-06-29
+#### 🌟 Features
+- **(in-memory)** use realistic seed payers in in-memory implementation (#26) - ([b443489](https://github.com/fincura-ai/stedi-sdk-js/commit/b443489eeb80d455af0fb59018df05d3c63708cb)) - Arthur LANNELUCQ
+
+- - -
+
 ## [v1.6.0](https://github.com/fincura-ai/stedi-sdk-js/compare/117956a23ca3430556d1fb41a35119ad4b1e669f..v1.6.0) - 2026-06-26
 #### 🌟 Features
 - add in-memory client for testing purposes (#25) - ([117956a](https://github.com/fincura-ai/stedi-sdk-js/commit/117956a23ca3430556d1fb41a35119ad4b1e669f)) - Arthur LANNELUCQ
