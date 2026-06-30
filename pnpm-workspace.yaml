@@ -1,0 +1,12 @@
+allowBuilds:
+  '@swc/core': false
+  esbuild: false
+  unrs-resolver: false
+confirmModulesPurge: false
+enablePrePostScripts: true
+ignoredBuiltDependencies:
+  - esbuild
+minimumReleaseAge: 10080 # 7 days
+minimumReleaseAgeStrict: true
+strictDepBuilds: true
+strictPeerDependencies: true

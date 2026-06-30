@@ -1,8 +1,7 @@
 {
   "author": "Fincura Technologies, Inc.",
-  "packageManager": "pnpm@10.11.0",
   "dependencies": {
-    "axios": "1.14.0"
+    "axios": "1.18.1"
   },
   "description": "Stedi SDK JS",
   "devDependencies": {
@@ -26,6 +25,7 @@
   "license": "MIT",
   "main": "dist/index.js",
   "name": "@fincuratech/stedi-sdk-js",
+  "packageManager": "pnpm@11.9.0",
   "publishConfig": {
     "access": "public"
   },
