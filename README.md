@@ -19,6 +19,7 @@ TypeScript SDK for [Stedi's EDI Platform and Healthcare APIs](https://www.stedi.
 
 - [Installation](#installation)
 - [Quick Start](#quick-start)
+- [In-Memory Client (Testing & Local Dev)](#in-memory-client-testing--local-dev)
 - [API Reference](#api-reference)
   - [Eligibility](#eligibility)
   - [Payers](#payers)
@@ -84,6 +85,41 @@ const eligibilityResult = await stedi.eligibility.check({
 
 console.log(eligibilityResult.benefitsInformation);
 ```
+
+## In-Memory Client (Testing & Local Dev)
+
+`createInMemoryStediClient(options?)` returns a client that satisfies the exact
+same `StediClient` contract as `createStediClient`, but never touches the network:
+writes (`provider.create`, `enrollment.create`, …) land in an in-memory store and
+reads come back from it. Use it to exercise provider/enrollment flows in tests and
+local/dev runs without creating real records in Stedi.
+
+```typescript
+import {
+  createInMemoryStediClient,
+  createInMemoryStediStore,
+} from '@fincuratech/stedi-sdk-js';
+
+// A shared store gives several clients read-after-write consistency
+const store = createInMemoryStediStore();
+const stedi = createInMemoryStediClient({ store });
+
+const provider = await stedi.provider.create({
+  name: 'Main Street Medical Clinic',
+  npi: '1234567890',
+  taxId: '123456789',
+  taxIdType: 'EIN',
+  contacts: [],
+});
+
+await stedi.provider.get(provider.id); // resolves from memory
+```
+
+Everything consumer-specific is injected through `options` (`store`, `seedPayers`,
+`buildEligibilityResponse`, `buildTransactionPage`, `now`); the SDK ships only
+generic, environment-agnostic defaults. **Deciding when to use the real client vs.
+the in-memory one, and providing realistic business fixtures, remains entirely the
+consumer's responsibility** — the SDK has no notion of your environment or payers.
 
 ## API Reference
 
