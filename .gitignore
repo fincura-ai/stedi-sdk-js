@@ -8,12 +8,14 @@
 !eslint.config.mjs
 !.gitignore
 !.npmignore
+!.npmrc
 !CHANGELOG.md
 !cog.toml
 !jest.config.mjs
 !LICENSE
 !package.json
 !package-lock.json
+!pnpm-workspace.yaml
 !pnpm-lock.yaml
 !README.md
 !tsconfig.json
