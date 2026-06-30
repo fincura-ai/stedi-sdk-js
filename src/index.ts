@@ -1,17 +1,6 @@
-import { eligibility } from './endpoints/eligibility.js';
-import { enrollment } from './endpoints/enrollment.js';
-import { payers } from './endpoints/payers.js';
-import { provider } from './endpoints/provider.js';
-import { transactions } from './endpoints/transactions.js';
-import { stediClient } from './lib/client.js';
+import { buildStediClient, type StediClient } from './sdk.js';
+import { withTestMode } from './test-mode.js';
 
-export {
-  clearInMemoryStediStore,
-  createInMemoryStediClient,
-  createInMemoryStediStore,
-  type InMemoryStediClientOptions,
-  type InMemoryStediStore,
-} from './in-memory.js';
 export { StediApiError, type StediErrorBody } from './lib/errors.js';
 export {
   createConsoleLogger,
@@ -20,23 +9,27 @@ export {
   setLogger,
 } from './lib/logger.js';
 export * from './lib/types.js';
+export { type StediClient } from './sdk.js';
 
-export const createStediClient = (apiKey: string) => {
-  const coreBaseUrl = 'https://core.us.stedi.com/2023-08-01';
-  const healthcareBaseUrl = 'https://healthcare.us.stedi.com/2024-04-01';
-  const enrollmentsBaseUrl = 'https://enrollments.us.stedi.com/2024-09-01';
+export type StediMode = 'live' | 'test';
 
-  const client = stediClient(apiKey);
-  return {
-    downloadFile: client.downloadFile,
-    eligibility: eligibility(client, healthcareBaseUrl),
-    enrollment: enrollment(client, enrollmentsBaseUrl),
-    payers: payers(client, healthcareBaseUrl),
-    provider: provider(client, enrollmentsBaseUrl),
-    transactions: transactions(client, coreBaseUrl),
-  };
+/**
+ * Create a Stedi API client.
+ *
+ * @param apiKey - Stedi API key.
+ * @param mode - `'live'` sends every request to Stedi. `'test'` fakes
+ *   `provider.create` and `enrollment.create` in memory (unsupported in Stedi
+ *   test mode) and merges those records into real Stedi reads. If Stedi rejects
+ *   the API key, `'test'` silently serves fully mocked data instead.
+ * @returns A {@link StediClient}.
+ */
+export const createStediClient = (
+  apiKey: string,
+  mode: StediMode,
+): StediClient => {
+  const client = buildStediClient(apiKey);
+
+  return mode === 'test' ? withTestMode(client) : client;
 };
-
-export type StediClient = ReturnType<typeof createStediClient>;
 
 export default createStediClient;

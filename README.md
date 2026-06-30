@@ -19,7 +19,7 @@ TypeScript SDK for [Stedi's EDI Platform and Healthcare APIs](https://www.stedi.
 
 - [Installation](#installation)
 - [Quick Start](#quick-start)
-- [In-Memory Client (Testing & Local Dev)](#in-memory-client-testing--local-dev)
+- [Modes: live vs test](#modes-live-vs-test)
 - [API Reference](#api-reference)
   - [Eligibility](#eligibility)
   - [Payers](#payers)
@@ -64,7 +64,7 @@ pnpm add @fincuratech/stedi-sdk-js
 import { createStediClient } from '@fincuratech/stedi-sdk-js';
 
 // Initialize the client with your Stedi API key
-const stedi = createStediClient('your-stedi-api-key');
+const stedi = createStediClient('your-stedi-api-key', 'live');
 
 // Check insurance eligibility
 const eligibilityResult = await stedi.eligibility.check({
@@ -86,25 +86,35 @@ const eligibilityResult = await stedi.eligibility.check({
 console.log(eligibilityResult.benefitsInformation);
 ```
 
-## In-Memory Client (Testing & Local Dev)
+## Modes: live vs test
 
-`createInMemoryStediClient(options?)` returns a client that satisfies the exact
-same `StediClient` contract as `createStediClient`, but never touches the network:
-writes (`provider.create`, `enrollment.create`, …) land in an in-memory store and
-reads come back from it. Use it to exercise provider/enrollment flows in tests and
-local/dev runs without creating real records in Stedi.
+`createStediClient(apiKey, mode)` takes a mandatory `mode` argument: `'live'` or
+`'test'`. This mirrors [Stedi's test mode](https://www.stedi.com/docs/healthcare/test-mode)
+and complements the enrollment endpoints Stedi test mode does not yet support.
+
+| Mode | Behavior |
+|------|----------|
+| `'live'` | Every request goes to Stedi. Use in production. |
+| `'test'` | `provider.create` and `enrollment.create` are stored in memory (transaction enrollment is [not supported in Stedi test mode](https://www.stedi.com/docs/healthcare/test-mode)). Reads call Stedi and merge in-memory records. `eligibility`, `payers`, `transactions`, and `downloadFile` pass through to Stedi unchanged. |
+
+In `'test'` mode the API key is never inspected. If Stedi rejects the key with a
+`401`/`403` (a fake, empty, or wrong key), the client silently switches to fully
+mocked data for all reads: built-in seed payers, a minimal eligibility response,
+empty transactions, a placeholder EDI file, and provider/enrollment reads served
+from the in-memory store. This lets the same code run with a real test key (real
+reads merged with in-memory writes) or with no usable key at all (fully offline).
+Non-auth errors (e.g. `500`, network failures) are not swallowed and still throw.
 
 ```typescript
-import {
-  createInMemoryStediClient,
-  createInMemoryStediStore,
-} from '@fincuratech/stedi-sdk-js';
+import { createStediClient } from '@fincuratech/stedi-sdk-js';
 
-// A shared store gives several clients read-after-write consistency
-const store = createInMemoryStediStore();
-const stedi = createInMemoryStediClient({ store });
+// Production: all requests hit Stedi
+const live = createStediClient(process.env.STEDI_API_KEY, 'live');
 
-const provider = await stedi.provider.create({
+// Test/dev: enrollment writes are faked; reads merge real + in-memory data
+const test = createStediClient(process.env.STEDI_API_KEY, 'test');
+
+const provider = await test.provider.create({
   name: 'Main Street Medical Clinic',
   npi: '1234567890',
   taxId: '123456789',
@@ -112,14 +122,15 @@ const provider = await stedi.provider.create({
   contacts: [],
 });
 
-await stedi.provider.get(provider.id); // resolves from memory
+// Resolves from the in-memory store without calling Stedi
+await test.provider.get(provider.id);
+
+// Lists real Stedi providers plus in-memory ones
+await test.provider.list();
 ```
 
-Everything consumer-specific is injected through `options` (`store`, `seedPayers`,
-`buildEligibilityResponse`, `buildTransactionPage`, `now`); the SDK ships only
-generic, environment-agnostic defaults. **Deciding when to use the real client vs.
-the in-memory one, and providing realistic business fixtures, remains entirely the
-consumer's responsibility** — the SDK has no notion of your environment or payers.
+When Stedi adds native test support for enrollment, the SDK can stop intercepting
+those writes and they will flow through to Stedi with no API shape change.
 
 ## API Reference
 
@@ -633,7 +644,7 @@ import type {
 ```typescript
 import { createStediClient, type StediEligibilityInput } from '@fincuratech/stedi-sdk-js';
 
-const stedi = createStediClient(process.env.STEDI_API_KEY!);
+const stedi = createStediClient(process.env.STEDI_API_KEY, 'live');
 
 // TypeScript will validate your input
 const input: StediEligibilityInput = {
@@ -667,7 +678,7 @@ By default, the SDK uses a no-op logger that doesn't output anything:
 ```typescript
 import { createStediClient } from '@fincuratech/stedi-sdk-js';
 
-const stedi = createStediClient('your-api-key');
+const stedi = createStediClient('your-api-key', 'live');
 // No logging output - silent by default
 ```
 
@@ -681,7 +692,7 @@ import { createStediClient, setLogger, createConsoleLogger } from '@fincuratech/
 // Enable console logging at 'debug' level
 setLogger(createConsoleLogger('debug'));
 
-const stedi = createStediClient('your-api-key');
+const stedi = createStediClient('your-api-key', 'live');
 
 // Now you'll see debug logs in the console:
 // [stedi-sdk] DEBUG: Stedi API request { method: 'POST', path: '/eligibility', ... }
@@ -728,7 +739,7 @@ const stediLogger: Logger = {
 // Set the custom logger
 setLogger(stediLogger);
 
-const stedi = createStediClient('your-api-key');
+const stedi = createStediClient('your-api-key', 'live');
 // All SDK logs now go through Winston
 ```
 
@@ -754,7 +765,7 @@ const stediLogger: Logger = {
 
 setLogger(stediLogger);
 
-const stedi = createStediClient('your-api-key');
+const stedi = createStediClient('your-api-key', 'live');
 ```
 
 ### Logger Interface

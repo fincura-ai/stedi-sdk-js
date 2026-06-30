@@ -1,10 +1,10 @@
-import { type StediClient } from '../lib/client.js';
+import { type StediHttpClient } from '../lib/client.js';
 import {
   type StediTransactionGetResponse,
   type StediTransactionListResponse,
 } from '../lib/types.js';
 
-export const transactions = (client: StediClient, baseUrl: string) => {
+export const transactions = (client: StediHttpClient, baseUrl: string) => {
   return {
     /**
      * Get a transaction.

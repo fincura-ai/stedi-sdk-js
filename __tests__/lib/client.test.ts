@@ -1,6 +1,6 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
-import { stediClient } from '../../src/lib/client.js';
+import { stediHttpClient } from '../../src/lib/client.js';
 import { StediApiError } from '../../src/lib/errors.js';
 
 // Mock dependencies
@@ -18,11 +18,11 @@ const testBaseUrl = 'https://test-api.example.com';
 
 describe('stediClient', () => {
   const mockApiKey = 'test-api-key';
-  let client: ReturnType<typeof stediClient>;
+  let client: ReturnType<typeof stediHttpClient>;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    client = stediClient(mockApiKey);
+    client = stediHttpClient(mockApiKey);
   });
 
   describe('request', () => {

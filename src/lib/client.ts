@@ -4,11 +4,11 @@ import { StediApiError } from './errors.js';
 import { getLogger } from './logger.js';
 
 /**
- * Create a client for the Stedi API.
+ * Create an HTTP client for the Stedi API.
  *
- * @returns The Stedi client.
+ * @returns The Stedi HTTP client.
  */
-export const stediClient = (apiKey: string) => {
+export const stediHttpClient = (apiKey: string) => {
   const defaultHeaders = {
     headers: {
       Authorization: apiKey,
@@ -132,4 +132,4 @@ export const stediClient = (apiKey: string) => {
   };
 };
 
-export type StediClient = ReturnType<typeof stediClient>;
+export type StediHttpClient = ReturnType<typeof stediHttpClient>;

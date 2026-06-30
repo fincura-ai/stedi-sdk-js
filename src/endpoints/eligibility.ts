@@ -1,10 +1,10 @@
-import { type StediClient } from '../lib/client.js';
+import { type StediHttpClient } from '../lib/client.js';
 import {
   type StediEligibilityInput,
   type StediEligibilityResponse,
 } from '../lib/types.js';
 
-export const eligibility = (client: StediClient, baseUrl: string) => {
+export const eligibility = (client: StediHttpClient, baseUrl: string) => {
   return {
     /**
      * Sends a real-time eligibility check to payers.
