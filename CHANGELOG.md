@@ -2,6 +2,16 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [v2.0.0](https://github.com/fincura-ai/stedi-sdk-js/compare/b56323792e7980546c177ea26bd3206d3a65c07f..v2.0.0) - 2026-07-02
+#### 🌟 Features
+- Implement internal test mode (#27) - ([3bdb1f9](https://github.com/fincura-ai/stedi-sdk-js/commit/3bdb1f94d6e6db876184af48c409b19dccf4c435)) - [@sylver](https://github.com/sylver)
+#### 📦 Continuous Integration
+- add prerelease workflow - ([5f19b52](https://github.com/fincura-ai/stedi-sdk-js/commit/5f19b52809763bfe6f873a3094083c02fe65be0f)) - [@sylver](https://github.com/sylver)
+#### 🧹 Miscellaneous Chores
+- **(deps)** bump axios from 1.13.6 to 1.18.1 in the minor-production-deps group (#22) - ([b563237](https://github.com/fincura-ai/stedi-sdk-js/commit/b56323792e7980546c177ea26bd3206d3a65c07f)) - dependabot[bot]
+
+- - -
+
 ## [v1.7.0](https://github.com/fincura-ai/stedi-sdk-js/compare/b443489eeb80d455af0fb59018df05d3c63708cb..v1.7.0) - 2026-06-29
 #### 🌟 Features
 - **(in-memory)** use realistic seed payers in in-memory implementation (#26) - ([b443489](https://github.com/fincura-ai/stedi-sdk-js/commit/b443489eeb80d455af0fb59018df05d3c63708cb)) - Arthur LANNELUCQ
