@@ -1,4 +1,4 @@
-import { type StediClient } from '../lib/client.js';
+import { type StediHttpClient } from '../lib/client.js';
 import {
   type StediListProvidersParams,
   type StediProviderInput,
@@ -6,7 +6,7 @@ import {
   type StediProviderResponse,
 } from '../lib/types.js';
 
-export const provider = (client: StediClient, baseUrl: string) => {
+export const provider = (client: StediHttpClient, baseUrl: string) => {
   return {
     /**
      * Create a Stedi provider

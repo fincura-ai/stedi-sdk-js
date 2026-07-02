@@ -1,4 +1,4 @@
-import { type StediClient } from '../lib/client.js';
+import { type StediHttpClient } from '../lib/client.js';
 import {
   type StediEnrollmentInput,
   type StediEnrollmentResponse,
@@ -6,7 +6,7 @@ import {
   type StediListEnrollmentsResponse,
 } from '../lib/types.js';
 
-export const enrollment = (client: StediClient, baseUrl: string) => {
+export const enrollment = (client: StediHttpClient, baseUrl: string) => {
   return {
     /**
      * Create a Stedi enrollment for a provider
