@@ -38,9 +38,6 @@ jobs:
       - name: Setup Environment
         uses: ./.github/actions/setup-env
 
-      - name: Build package
-        run: pnpm build
-
       - name: Determine npm tag
         id: determine-tag
         run: |
@@ -55,6 +52,17 @@ jobs:
           
           echo "npm-tag=$NPM_TAG" >> $GITHUB_OUTPUT
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # Prerelease tags (from cd-prerelease.yml) are not backed by a package.json
+      # commit anywhere - only the git tag carries the version. This keeps the
+      # published tarball's package.json in sync with the tag, without committing
+      # or pushing anything. It's a no-op for regular releases, where package.json
+      # already matches the tag after cog bump.
+      - name: Sync package version to tag
+        run: npm version "${{ steps.determine-tag.outputs.version }}" --no-git-tag-version --allow-same-version
+
+      - name: Build package
+        run: pnpm build
 
       # Upload dist for publishing jobs
       - name: Upload build artifacts
@@ -86,6 +94,11 @@ jobs:
 
       - name: Setup Environment
         uses: ./.github/actions/setup-env
+
+      # See the `Sync package version to tag` step in the `build` job. Each job
+      # gets a fresh checkout, so the version must be synced again here.
+      - name: Sync package version to tag
+        run: npm version "${{ needs.build.outputs.version }}" --no-git-tag-version --allow-same-version
 
       - name: Publish to npm
         run: npm publish --tag ${{ needs.build.outputs.npm-tag }}
@@ -140,6 +153,11 @@ jobs:
 
       - name: Setup Environment
         uses: ./.github/actions/setup-env
+
+      # See the `Sync package version to tag` step in the `build` job. Each job
+      # gets a fresh checkout, so the version must be synced again here.
+      - name: Sync package version to tag
+        run: npm version "${{ needs.build.outputs.version }}" --no-git-tag-version --allow-same-version
 
       - name: Create package tarball
         run: |

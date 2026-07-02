@@ -1,0 +1,113 @@
+name: '[CD] Prerelease'
+
+on:
+  workflow_dispatch:
+    inputs:
+      pre-release:
+        description: |
+          Pre-release identifier
+        default: 'beta'
+        options:
+          - 'alpha'
+          - 'beta'
+          - 'rc'
+        required: true
+        type: choice
+
+      force-increment:
+        description: |
+          Force a specific version increment
+        default: 'auto'
+        options:
+          - 'auto'
+          - 'major'
+          - 'minor'
+          - 'patch'
+        required: false
+        type: choice
+
+run-name: Create Prerelease [${{ github.ref_name }}]
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    name: Tag & Release Prerelease
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name 'Fincura CI'
+          git config user.email github-actions@github.com
+
+      - name: Set up package manager
+        uses: actions/setup-node@v4
+
+      # Also installs the `cog` command needed in the following steps
+      - name: Conventional commit check
+        uses: cocogitto/cocogitto-action@v3
+        with:
+          git-user: fincura-ci
+          git-user-email: github-actions@github.com
+
+      - name: Compute base version
+        id: base-version
+        run: |
+          BUMP_FLAGS="--${{ github.event.inputs.force-increment }}"
+
+          # cog's branch_whitelist check runs even under --dry-run, and cog also
+          # refuses to run at all with a dirty/untracked working tree - so the
+          # patch has to be an actual local commit, not just an unstaged edit.
+          # We commit the patched cog.toml locally (never pushed), run the
+          # dry-run, then hard-reset to discard it. Nothing is ever pushed here,
+          # so the branch's real history and cog.toml are completely untouched.
+          sed -i "s#branch_whitelist = \[ \"main\" \]#branch_whitelist = [ \"main\", \"${GITHUB_REF_NAME}\" ]#" cog.toml
+          git commit -am "chore: temporary branch_whitelist patch for prerelease dry-run [skip ci]"
+
+          VERSION=$(eval "cog bump ${BUMP_FLAGS} --dry-run")
+          VERSION="${VERSION#v}"   # cog.toml sets tag_prefix = "v", strip it for a bare semver
+
+          git reset --hard HEAD~1
+
+          echo "base=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Compute next prerelease increment
+        id: next-increment
+        run: |
+          BASE="${{ steps.base-version.outputs.base }}"
+          PRE="${{ github.event.inputs.pre-release }}"
+
+          git fetch --tags
+          LAST=$(git tag -l "v${BASE}-${PRE}.*" | sed "s/^v${BASE}-${PRE}\.//" | sort -n | tail -1)
+          NEXT=$(( ${LAST:--1} + 1 ))
+
+          echo "version=${BASE}-${PRE}.${NEXT}" >> $GITHUB_OUTPUT
+
+      - name: Tag prerelease (no branch commit or push)
+        id: tag
+        run: |
+          VERSION="v${{ steps.next-increment.outputs.version }}"
+          git tag -a "$VERSION" -m "Prerelease $VERSION (${GITHUB_REF_NAME}@${GITHUB_SHA})"
+          git push origin "refs/tags/$VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Upload github prerelease
+        uses: softprops/action-gh-release@v2.4.2
+        with:
+          tag_name: ${{ steps.tag.outputs.version }}
+          prerelease: true
+          generate_release_notes: false
+          body: |
+            Prerelease build from branch `${{ github.ref_name }}` at ${{ github.sha }}.
+
+            Install for testing:
+            ```
+            npm install @fincuratech/stedi-sdk-js@next
+            ```

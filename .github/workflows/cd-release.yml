@@ -40,6 +40,7 @@ jobs:
   tag:
     runs-on: ubuntu-latest
     name: Bump, Tag & Release
+    if: github.ref == 'refs/heads/main'
 
     permissions:
       contents: write
