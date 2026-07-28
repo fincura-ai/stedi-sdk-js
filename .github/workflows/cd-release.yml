@@ -47,7 +47,7 @@ jobs:
 
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_SSH_KEY }}
@@ -60,11 +60,11 @@ jobs:
           git config --global user.name 'Fincura CI'
 
       - name: Set up package manager
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
 
       # Also installs the `cog` command needed in the following steps
       - name: Conventional commit check
-        uses: cocogitto/cocogitto-action@v3
+        uses: cocogitto/cocogitto-action@9a9fe03b31c47444290c0d7f9b1ee1b44ee13f20 # v4.1.0
         with:
           git-user: fincura-ci
           git-user-email: github-actions@github.com
@@ -101,7 +101,7 @@ jobs:
           > RELEASE_CHANGELOG.md
 
       - name: Upload github release
-        uses: softprops/action-gh-release@v2.4.2
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
         with:
           body_path: RELEASE_CHANGELOG.md
           tag_name: ${{ steps.bump.outputs.version }}
